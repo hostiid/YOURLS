@@ -48,6 +48,8 @@ Thumbs.db
 Desktop.ini
 # Mac crap
 .DS_Store
-# NetBeans files
+# IDE files
 /nbproject/
 .idea
+.vs
+.vscode

@@ -143,7 +143,7 @@ function yourls_add_new_link( $url, $keyword = '', $title = '', $row_id = 1 ) {
             $return['title']    = $title;
             $return['html']     = yourls_table_add_row( $keyword, $url, $title, $ip, 0, time(), $row_id );
             $return['shorturl'] = yourls_link($keyword);
-            $return['statusCode'] = 200; // 200 OK
+            $return['statusCode'] = '200'; // 200 OK
         } else {
             // unknown database error, couldn't store result
             $return['status']   = 'fail';
@@ -208,17 +208,30 @@ function yourls_is_shorturl( $shorturl ) {
 }
 
 /**
+ * Get the list of reserved keywords for URLs.
+ *
+ * @return array             Array of reserved keywords
+ */
+function yourls_get_reserved_URL() {
+    global $yourls_reserved_URL;
+    if ( ! isset( $yourls_reserved_URL ) || ! is_array( $yourls_reserved_URL ) ) {
+        return array();
+    }
+
+    return $yourls_reserved_URL;
+}
+
+/**
  * Check to see if a given keyword is reserved (ie reserved URL or an existing page). Returns bool
  *
  * @param  string $keyword   Short URL keyword
  * @return bool              True if keyword reserved, false if free to be used
  */
 function yourls_keyword_is_reserved( $keyword ) {
-    global $yourls_reserved_URL;
     $keyword = yourls_sanitize_keyword( $keyword );
     $reserved = false;
 
-    if ( in_array( $keyword, $yourls_reserved_URL)
+    if ( in_array( $keyword, yourls_get_reserved_URL() )
         or yourls_is_page($keyword)
         or is_dir( YOURLS_ABSPATH ."/$keyword" )
     )
@@ -595,12 +608,12 @@ function yourls_get_keyword_stats( $shorturl ) {
     if( !$res ) {
         // non existent link
         $return = array(
-            'statusCode' => 404,
+            'statusCode' => '404',
             'message'    => 'Error: short URL not found',
         );
     } else {
         $return = array(
-            'statusCode' => 200,
+            'statusCode' => '200',
             'message'    => 'success',
             'link'       => array(
                 'shorturl' => yourls_link($res->keyword),
